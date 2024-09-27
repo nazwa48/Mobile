@@ -287,6 +287,7 @@ return MaterialApp(
 
 Output :
 ![alt text](assets/hasilPark2.png)
+- Penjelasan : Pada praktikum kedua, hasil kode program akan menampilkan sebuah baris yang berisi tiga button bernama call, route, dan share.
 
 ## Praktikum 3 : Implementasi text section
 
