@@ -205,6 +205,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### Langkah 10:Jalankan aplikasi. Anda akan melihat layar yang mirip dengan berikut ini:
 
-``` dart
+
 ![alt text](image-9.png)
-```
+
