@@ -324,20 +324,58 @@ return Scaffold(
 ### Langkah 11: Untuk properti anak dari Column, tambahkan beberapa Text yang akan berisi hasil posting, lima TextFields, masing-masing terikat pada TextEditingController, dan sebuah ElevatedButton untuk menyelesaikan aksi POST (metode postPizza akan dibuat berikutnya). Juga, tambahkan SizedBox untuk memberi jarak pada widget di layar.
 
 ```dart
-Text(operationResult, style: TextStyle(backgroundColor: Colors.green[200], color: Colors.black),),
-              const SizedBox(height: 24),
-              _textField('Insert ID', _txtId),
-              _textField('Insert Pizza Name', _txtName),
-              _textField('Insert Description', _txtDescription),
-              _textField('Insert Price', _txtPrice),
-              _textField('Insert Image URL', _txtImageUrl),
-              const SizedBox(height: 24),
+Text(
+                operationResult,
+                style: TextStyle(
+                    backgroundColor: Colors.green[200], color: Colors.black),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextField(
+                controller: txtId,
+                decoration: const InputDecoration(hintText: 'Insert ID'),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextField(
+                controller: txtName,
+                decoration:
+                    const InputDecoration(hintText: 'Insert Pizza Name'),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextField(
+                controller: txtPrice,
+                decoration: const InputDecoration(hintText: 'Insert Price'),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextField(
+                controller: txtDescription,
+                decoration:
+                    const InputDecoration(hintText: 'Insert Description'),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextField(
+                controller: txtImageUrl,
+                decoration: const InputDecoration(hintText: 'Insert Image Url'),
+              ),
+              const SizedBox(
+                height: 48,
+              ),
               ElevatedButton(
                   onPressed: () {
                     postPizza();
                   },
-                  child: const Text('Send Post')
-              )
+                  child: Text('Send Post'))
+            ],
+          ),
 ```
 
 ### Langkah 12: Di bagian bawah kelas _PizzaDetailState, tambahkan metode postPizza
@@ -402,49 +440,124 @@ floatingActionButton: FloatingActionButton(
 
 ![alt text](image-16.png)
 
+**Jawab :**
+![alt text](image-18.png)
+
 ### Langkah 3: Simpan
 
-
+![alt text](image-19.png)
 
 ### Langkah 4: Di proyek Flutter, tambahkan metode putPizza ke kelas HttpHelper di file http_helper.dart
 
 ``` dart
-
+ Future<String> putPizza(Pizza pizza) async {
+    String path = '/pizza';
+    String body = json.encode(pizza.toJson());
+    Uri url = Uri.https(authority, path);
+    http.Response response = await http.put(url, body: body);
+    return response.body;
+  }
 ``` 
 
 ### Langkah 5: Di kelas PizzaDetailScreen di file pizza_detail.dart, tambahkan dua properti, Pizza dan boolean, dan di konstruktor, atur dua properti tersebut
 
 ``` dart
-
+final Pizza pizza;
+  final bool isNew;
+  const PizzaDetailScreen({Key? key, required this.pizza, required this.isNew}) : super(key: key);
+  
 ``` 
 
 ### Langkah 6: Di kelas PizzaDetailScreenState, override metode initState. Bila properti isNew dari kelas PizzaDetail tidak baru, properti ini akan menetapkan konten TextFields dengan nilai objek Pizza yang dilewatkan
 
 ``` dart
-
+void initState() {
+    if (!widget.isNew) {
+      txtId.text = widget.pizza!.id.toString();
+      txtName.text = widget.pizza!.pizzaName;
+      txtDescription.text = widget.pizza!.description;
+      txtPrice.text = widget.pizza!.price.toString();
+      txtImageUrl.text = widget.pizza!.imageUrl;
+    }
+    super.initState();
+  }
 ``` 
 
 ### Langkah 7: Edit metode savePizza sehingga memanggil metode helper.postPizza ketika properti isNew bernilai benar, dan helper.putPizza ketika bernilai salah
 
 ``` dart
-
+Future savePizza() async {
+    HttpHelper helper = HttpHelper();
+    Pizza pizza = Pizza(
+      id: int.parse(_txtId.text),
+      pizzaName: _txtName.text,
+      description: _txtDescription.text,
+      price: double.parse(_txtPrice.text),
+      imageUrl: _txtImageUrl.text,
+    );
+    final result = await (widget.isNew ? helper.postPizza(pizza) : helper.putPizza(pizza));
+    setState(() {
+      operationResult = result;
+    });
+  }
 ``` 
 
 ### Langkah 8: Di file main.dart, di metode build _MyHomePageState, tambahkan properti onTap ke ListTile sehingga saat pengguna mengetuknya, aplikasi akan mengubah rute dan menampilkan layar PizzaDetail, dengan menampilkan data pizza yang ada saat ini dan menjadikan false untuk parameter isNew
 
 ``` dart
-
+return ListTile(
+                title: Text(snapshot.data![index].pizzaName),
+                subtitle: Text(
+                  snapshot.data![index].description + ' - € ' + snapshot.data![index].price.toString(),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PizzaDetailScreen(
+                        pizza: snapshot.data![index],
+                        isNew: false,
+                      ),
+                    ),
+                  );
+                },
 ``` 
 
 ### Langkah 9: Di floatingActionButton, passing data Pizza baru dan menjadikan true untuk parameterisNew ke rute PizzaDetail
 
 ``` dart
-
+floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PizzaDetailScreen(
+                pizza: Pizza(
+                  id: 0,
+                  pizzaName: '',
+                  description: '',
+                  price: 0.0,
+                  imageUrl: '',
+                ),
+                isNew: true,
+              ),
+            ),
+          );
+        },
 ``` 
 
 ### Langkah 10: Jalankan aplikasi. Pada layar utama, ketuk Pizza mana pun untuk menavigasi ke rute PizzaDetail
 
+![alt text](praktikum3.gif)
+
 ### Langkah 11: Edit detail pizza di kolom teks dan tekan tombol Simpan. Anda akan melihat pesan yang menunjukkan bahwa detail pizza telah diperbarui
+
+**Jawab :**
+
+![alt text](image-20.png)
+
+![alt text](praktikum3.gif)
 
 
 
@@ -457,19 +570,62 @@ floatingActionButton: FloatingActionButton(
 
 ![alt text](image-17.png)
 
+![alt text](image-21.png)
+
 ### Langkah 3: Save the new stub
 
+![alt text](image-22.png)
 
 ### Langkah 4: Di proyek Flutter, tambahkan metode deletePizza ke kelas HttpHelper di file http_helper.dart
 
 ```dart
-
+Future<String> deletePizza(int id) async {
+    String path = '/pizza';
+    Uri url = Uri.https(authority, path);
+    http.Response response = await http.delete(url);
+    return response.body;
+  }
 ```
 
 ### Langkah 5: Pada file main.dart, di metode build kelas _MyHomePageState, refaktor itemBuilder dari ListView.builder agar ListTile terdapat dalam widget Dismissible, seperti berikut
 
 ```dart
-
+FutureBuilder(
+          future: callPizzas(),
+          builder: (BuildContext context, AsyncSnapshot<List<Pizza>> snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+              itemCount: (snapshot.data == null) ? 0 : snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                    key: Key(index.toString()),
+                    onDismissed: (direction) {
+                      HttpHelper httpHelper = HttpHelper();
+                      snapshot.data!.removeWhere((element) => element.id == snapshot.data![index].id);
+                      httpHelper.deletePizza(snapshot.data![index].id);
+                    },
+                    child: ListTile(
+                      title: Text(snapshot.data![index].pizzaName),
+                      subtitle: Text(snapshot.data![index].description + ' - €' + snapshot.data![index].price.toString()),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PizzaDetailScreen(pizza: snapshot.data![index], isNew: false)),
+                        );
+                      },
+                    )
+                );
+              },
+            );
+          },
+      ),
 ```
 
 ### Langkah 6: Jalankan aplikasi. Saat Anda menggeser elemen apa pun dari daftar pizza, ListTile akan menghilang
+
+![alt text](praktikum4.gif)

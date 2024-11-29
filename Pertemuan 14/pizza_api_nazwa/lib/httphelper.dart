@@ -29,4 +29,19 @@ class HttpHelper {
     http.Response response = await http.post(url, body: body);
     return response.body;
   }
+
+   Future<String> putPizza(Pizza pizza) async {
+    String path = '/pizza';
+    String body = json.encode(pizza.toJson());
+    Uri url = Uri.https(authority, path);
+    http.Response response = await http.put(url, body: body);
+    return response.body;
+  }
+
+  Future<String> deletePizza(int id) async {
+    String path = '/pizza';
+    Uri url = Uri.https(authority, path);
+    http.Response response = await http.delete(url);
+    return response.body;
+  }
 }
