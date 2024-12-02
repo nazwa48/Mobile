@@ -628,4 +628,4 @@ FutureBuilder(
 
 ### Langkah 6: Jalankan aplikasi. Saat Anda menggeser elemen apa pun dari daftar pizza, ListTile akan menghilang
 
-![alt text](praktikum4.gif)
+![alt text](praktikumEmpat.gif)

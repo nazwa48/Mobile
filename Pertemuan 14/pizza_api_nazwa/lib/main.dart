@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter JSON Demo - Muhammad Fakhruddin Arif',
+      title: 'Flutter JSON Demo - Nazwa Ayunda M',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const MyHomePage(title: 'Flutter JSON Demo - Muhammad Fakhruddin Arif'),
+      home: const MyHomePage(title: 'Flutter JSON Demo -Nazwa Ayunda M'),
     );
   }
 }
